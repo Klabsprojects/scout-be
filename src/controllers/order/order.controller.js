@@ -8,7 +8,32 @@ const bcrypt = require('bcryptjs');
 let file = "order.controller";
 let Jkey = process.env.JWT_SECRET_KEY;
 
+// listOrder
+exports.listOrder = async (req, res) => {
+    console.log('helo from  controller');
+    try {
+        let query = {};
+        query.where = req.query;
+         console.log('query ', query);
+        let results;
+        if (req.query.id) {
+            console.log('if');
+            results = await commonService.findOne(db.order, query);
+        }
+        else {
+            console.log('else');
 
+            results = await commonService.findAll(db.order, query);
+        }
+        console.log('success');
+        console.log(results);
+        successRes(res, results, SUCCESS.LISTED);
+    } catch (error) {
+        console.log('error', error);
+        const message = error.message ? error.message : ERRORS.LISTED;
+        errorRes(res, error, message, file);
+    }
+}
 
 // addOrder
 exports.addOrder = async (req, res) => {
