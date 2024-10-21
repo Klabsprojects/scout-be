@@ -1,5 +1,5 @@
 module.exports = (app) => {
-    const value = require("../../controllers/product/product.controller");
+    const value = require("../../controllers/order/order.controller");
     const { joi, cache } = require("../../helpers/index.helper");
     const {  jwt, ERRORS, SUCCESS, Op } = require("../../helpers/index.helper");    
     const upload = require("../../middlewares/upload")
@@ -13,13 +13,12 @@ module.exports = (app) => {
 
 
   app.post(
-    "/addProduct",
+    "/addOrder",
     // [jwt.verifyToken],
-    upload.single('filepath'),
-    value.addProduct
+    value.addOrder
   );
 
-  app.route("/listProduct")
-    .get(value.listProduct)
+  app.route("/listOrder")
+    .get(value.listOrder)
 
 }

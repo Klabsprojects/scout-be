@@ -17,13 +17,16 @@ db.sequelize = sequelize;
 
 db.login = require("../src/models/login/login.model.js")(sequelize, Sequelize);
 db.user = require("../src/models/user/user.model.js")(sequelize, Sequelize);
-db.product = require("../src/models/product/product.model.js")(sequelize, Sequelize);
+db.product = require("../src/models/order/product.model.js")(sequelize, Sequelize);
+db.order = require("../src/models/order/order.model.js")(sequelize, Sequelize);
+db.address = require("../src/models/order/address.model.js")(sequelize, Sequelize);
 
 
 
 schema.forEach(x => {
     console.log(x.model);
-     if(x.model == 'login' || x.model == 'user' || x.model == 'product'
+     if(x.model == 'login' || x.model == 'user' || x.model == 'product' || x.model == 'order' ||
+        x.model == 'address'
      ){ 
         console.log('if ', x.table);
     }

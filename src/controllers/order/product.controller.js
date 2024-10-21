@@ -5,7 +5,7 @@ const { successRes, errorRes } = require("../../middlewares/response.middleware"
 
 const bcrypt = require('bcryptjs');
 
-let file = "login.controller";
+let file = "product.controller";
 let Jkey = process.env.JWT_SECRET_KEY;
 
 // listProduct

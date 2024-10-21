@@ -1,6 +1,8 @@
 const { Login } = require('./login/login.model');
 const { User } = require('./user/user.model');
-const { Product } = require('./product/product.model');
+const { Product } = require('./order/product.model');
+const { Order } = require('./order/order.model');
+const { Address } = require('./order/address.model');
 
 let schema = [];
 
