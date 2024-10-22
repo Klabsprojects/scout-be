@@ -5,11 +5,11 @@ const { successRes, errorRes } = require("../../middlewares/response.middleware"
 
 const bcrypt = require('bcryptjs');
 
-let file = "order.controller";
+let file = "address.controller";
 let Jkey = process.env.JWT_SECRET_KEY;
 
-// listOrder
-exports.listOrder = async (req, res) => {
+// listAddress
+exports.listAddress = async (req, res) => {
     console.log('helo from  controller');
     try {
         let query = {};
@@ -18,12 +18,12 @@ exports.listOrder = async (req, res) => {
         let results;
         if (req.query.id) {
             console.log('if');
-            results = await commonService.findOne(db.order, query);
+            results = await commonService.findOne(db.address, query);
         }
         else {
             console.log('else');
 
-            results = await commonService.findAll(db.order, query);
+            results = await commonService.findAll(db.address, query);
         }
         console.log('success');
         console.log(results);
@@ -35,36 +35,15 @@ exports.listOrder = async (req, res) => {
     }
 }
 
-// addOrder
-exports.addOrder = async (req, res) => {
+// addAddress
+exports.addAddress = async (req, res) => {
     try {
         console.log('try');
         console.log(req.body);
-        let resultArr;
-        let query = {
-            //productId: req.body.productId,
-            orderBy: req.body.orderBy,
-            totalPrice: req.body.totalPrice,
-            quantity: req.body.quantity,
-            addressId: req.body.addressId,
-            products: req.body.products
-        }
-        //req.body;
+        let query = req.body;
 
-        const results = await commonService.insertOne(db.order, query);
-        console.log('results ', results);
-        // if (!results) {
-        //     return res.status(401).json({ error: 'Error on Order creation' });
-        //     }
-        // if (results){
-        //     let addressQuery = {
-        //         orderId: results.id,
-        //         address: req.body.address,
-        //         pincode: req.body.pincode,
-        //         primaryOrSecondary: req.body.primaryOrSecondary
-        //     }
-        //     resultArr = await commonService.insertOne(db.address, addressQuery);
-        // }
+        const results = await commonService.insertOne(db.address, query);
+       
         successRes(res, results, SUCCESS.CREATED);
     } catch (error) {
         console.log('catch', error);

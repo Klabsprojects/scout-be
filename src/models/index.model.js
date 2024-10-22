@@ -3,6 +3,7 @@ const { User } = require('./user/user.model');
 const { Product } = require('./order/product.model');
 const { Order } = require('./order/order.model');
 const { Address } = require('./order/address.model');
+const { Cart } = require('./order/cart.model');
 
 let schema = [];
 

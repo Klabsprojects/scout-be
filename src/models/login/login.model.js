@@ -2,6 +2,11 @@ const { DATE, TIME } = require("sequelize");
 var Sequelize = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
     const Login = sequelize.define("login", {
+      id: {
+        type: DataTypes.INTEGER,
+        autoIncrement: true, // Assuming auto-increment for primary key
+        primaryKey: true,
+      },
       username: {
         type: DataTypes.STRING,
         allowNull: false,
