@@ -1,7 +1,7 @@
 const { DATE, TIME } = require("sequelize");
 var Sequelize = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
-    const Product = sequelize.define("product", {
+    const Cart = sequelize.define("cart", {
       productId: {
         type: DataTypes.INTEGER,
         allowNull: false,
@@ -25,5 +25,5 @@ module.exports = (sequelize, DataTypes) => {
     },
     );
 
-    return Product;
+    return Cart;
   };
