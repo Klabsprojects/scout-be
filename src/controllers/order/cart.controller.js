@@ -36,6 +36,61 @@ exports.listCart = async (req, res) => {
 // addCart
 exports.addCart = async (req, res) => {
     try {
+      console.log('try');
+      console.log(req.body);
+  
+      if (req.body.loginId && req.body.productId && req.body.quantity) {
+        const { loginId, productId, quantity } = req.body;
+  
+        // Step 1: Check if the product is already in the cart for the user
+        let existingCartItem = await commonService.findOne(db.cart, {
+          where: {
+            loginId: loginId,
+            productId: productId,
+          },
+        });
+  
+        if (existingCartItem) {
+          // Step 2: If product exists in cart, update the quantity
+          const newQuantity = existingCartItem.quantity + quantity; // Add new quantity to the existing one
+          let updateQuery = {
+            where: {
+              loginId: loginId,
+              productId: productId,
+            },
+            body: {
+              quantity: newQuantity,
+            },
+          };
+  
+          const updatedResult = await commonService.update(db.cart, updateQuery);
+          console.log('Updated Cart Item:', updatedResult);
+          successRes(res, updatedResult, SUCCESS.UPDATED);
+        } else {
+          // Step 3: If product does not exist, insert a new entry
+          let query = {
+            loginId: loginId,
+            productId: productId,
+            quantity: quantity,
+          };
+  
+          const newCartItem = await commonService.insertOne(db.cart, query);
+          console.log('New Cart Item:', newCartItem);
+          successRes(res, newCartItem, SUCCESS.CREATED);
+        }
+      } else {
+        throw new Error('Error on inputs');
+      }
+    } catch (error) {
+      console.log('catch', error);
+      const message = error.message ? error.message : ERRORS.LISTED;
+      errorRes(res, error, message, file);
+    }
+  };
+
+  
+exports.addCartOld = async (req, res) => {
+    try {
         console.log('try');
         console.log(req.body);
         let resultArr;
@@ -55,3 +110,4 @@ exports.addCart = async (req, res) => {
         errorRes(res, error, message, file);
     }
     }
+
