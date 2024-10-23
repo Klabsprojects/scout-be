@@ -17,6 +17,7 @@ module.exports = (sequelize, DataTypes) => {
       phoneNumber: {
         type: DataTypes.BIGINT,
         allowNull: false,
+        unique: true
       },
       doorNo: {
         type: DataTypes.STRING,
@@ -27,7 +28,7 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: false,
       },
       address: {
-        type: DataTypes.STRING, // 10 digits in total, with 2 decimals
+        type: DataTypes.STRING,
         allowNull: false,
       },
       city: {
@@ -45,7 +46,7 @@ module.exports = (sequelize, DataTypes) => {
       primaryOrSecondary: {
         type: DataTypes.ENUM('primary', 'secondary'),
         allowNull: false,
-        defaultValue: 'primary',
+        defaultValue: 'secondary',
       },
     },
     );

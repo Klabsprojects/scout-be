@@ -40,33 +40,64 @@ exports.addOrder = async (req, res) => {
     try {
         console.log('try');
         console.log(req.body);
-        let resultArr;
-        let query = {
-            //productId: req.body.productId,
-            orderBy: req.body.orderBy,
-            totalPrice: req.body.totalPrice,
-            quantity: req.body.quantity,
-            addressId: req.body.addressId,
-            products: req.body.products
+        let addressQuery;
+        let orderQuery
+        if(req.body.fullName && req.body.phoneNumber && req.body.doorNo && req.body.street &&
+            req.body.address && req.body.city && req.body.state && req.body.pincode
+        ){
+            console.log('true 1');
+            addressQuery = {
+                "loginId": req.body.orderBy,
+                "fullName": req.body.fullName,
+                "phoneNumber": req.body.phoneNumber,
+                "doorNo": req.body.doorNo,
+                "street": req.body.street,
+                "address": req.body.address,
+                "city": req.body.city,
+                "state": req.body.state,
+                "pincode": req.body.pincode
+           }
+           const results = await commonService.insertOne(db.address, addressQuery);
+           console.log('results ', results);
+        //    if (!results) {
+        //     console.log('false 1');
+        //         return res.status(401).json({ error: 'Error on address creation' });
+        //         }
+            if (results){
+                console.log('true 2');
+                orderQuery = {
+                    orderBy: req.body.orderBy,
+                    totalPrice: req.body.totalPrice,
+                    quantity: req.body.quantity,
+                    addressId: results.id,
+                    products: req.body.products
+                }
+                const orderResults = await commonService.insertOne(db.order, orderQuery);
+                console.log('orderResults ', orderResults);
+                successRes(res, orderResults, SUCCESS.CREATED);
+            }
+        
+    }
+    else {
+        console.log('true3');
+        if(req.body.orderBy && req.body.addressId){
+            console.log('true 4');
+            orderQuery = {
+                orderBy: req.body.orderBy,
+                totalPrice: req.body.totalPrice,
+                quantity: req.body.quantity,
+                addressId: req.body.addressId,
+                products: req.body.products
+            }
+            const orderResults = await commonService.insertOne(db.order, orderQuery);
+            console.log('orderResults ', orderResults);
+            successRes(res, orderResults, SUCCESS.CREATED);
         }
-        //req.body;
-
-        const results = await commonService.insertOne(db.order, query);
-        console.log('results ', results);
-        // if (!results) {
-        //     return res.status(401).json({ error: 'Error on Order creation' });
-        //     }
-        // if (results){
-        //     let addressQuery = {
-        //         orderId: results.id,
-        //         address: req.body.address,
-        //         pincode: req.body.pincode,
-        //         primaryOrSecondary: req.body.primaryOrSecondary
-        //     }
-        //     resultArr = await commonService.insertOne(db.address, addressQuery);
-        // }
-        successRes(res, results, SUCCESS.CREATED);
+        else    
+            throw 'Pls provide valid order inputs';
+    }
     } catch (error) {
+        console.log('false 2');
         console.log('catch', error);
         const message = error.message ? error.message : ERRORS.LISTED;
         errorRes(res, error, message, file);
