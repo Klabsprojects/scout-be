@@ -44,13 +44,8 @@ exports.addAddress = async (req, res) => {
         successRes(res, results, SUCCESS.CREATED);
     } catch (error) {
         console.log('catch', error);
-        if(error.name == 'SequelizeUniqueConstraintError'){
-            res.status(500).json({ error: 'Phone already registered' });
-        }
-        else{
             const message = error.message ? error.message : ERRORS.LISTED;
             errorRes(res, error, message, file);
-        }
             //res.status(500).json({ error: 'Address Registration failed' });
         
     }
