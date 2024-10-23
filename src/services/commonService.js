@@ -239,3 +239,103 @@ exports.findAllAttendedWithFilter = async (model, query, column, value) => {
     throw error;
   }
 };
+
+
+exports.updateProductStock1 = async(productId, quantityOrdered) => {
+  try {
+  console.log('productID ', productId, ' Qty', quantityOrdered);
+  // Fetch the current product details
+  let product = await commonService.findOne(db.product, { id: productId });
+  console.log('product ', product);
+  if (product) {
+      const newQuantity = product.quantity - quantityOrdered; // Adjust this according to your stock field
+      console.log('Qty,', product.quantity, 'New ', newQuantity);
+      let query = {
+          where: {
+              id: productId
+          },
+          body: {
+              quantity: newQuantity 
+          }
+      }
+      if (newQuantity >= 0) {
+          await commonService.update(db.product, query);
+          product = {}
+      } else {
+          throw new Error('Not enough stock available');
+      }
+  } else {
+      throw new Error('Product not found');
+  }
+} catch (error) {
+  throw error;
+}
+};
+
+exports.addOrder = async (req, res) => {
+  try {
+    let orderQuery;
+
+    console.log('Processing order...');
+
+    if (req.body.orderBy && req.body.addressId) {
+      console.log('Valid order input');
+
+      orderQuery = {
+        orderBy: req.body.orderBy,
+        totalPrice: req.body.totalPrice,
+        quantity: req.body.quantity,
+        addressId: req.body.addressId,
+        products: req.body.products,
+      };
+
+      const orderResults = await commonService.insertOne(db.order, orderQuery);
+      console.log('Order Results:', orderResults);
+
+      // Iterate over each product in the order
+      for (const product of req.body.products) {
+        console.log('Processing product:', product);
+
+        const productId = product.productId;
+        const quantityOrdered = product.quantity;
+
+        // Make sure to await each call to update the product stock
+        await this.updateProductStock(productId, quantityOrdered);
+      }
+
+      successRes(res, orderResults, SUCCESS.CREATED);
+    } else {
+      throw new Error('Please provide valid order inputs');
+    }
+  } catch (error) {
+    console.log('Error:', error);
+    const message = error.message ? error.message : ERRORS.LISTED;
+    errorRes(res, error, message, file);
+  }
+};
+
+exports.updateProductStock = async (productId, quantityOrdered) => {
+  console.log('Updating stock for Product ID:', productId, 'Ordered Quantity:', quantityOrdered);
+
+  // Fetch the current product details
+  let product = await commonService.findOne(db.product, { id: productId });
+  console.log('Fetched product:', product);
+
+  if (product) {
+    const newQuantity = product.quantity - quantityOrdered;
+
+    console.log('Current Quantity:', product.quantity, 'New Quantity:', newQuantity);
+
+    if (newQuantity >= 0) {
+      await commonService.update(db.product, {
+        where: { id: productId },
+        body: { quantity: newQuantity }, // Update quantity
+      });
+      console.log('Stock updated successfully for Product ID:', productId);
+    } else {
+      throw new Error('Not enough stock available');
+    }
+  } else {
+    throw new Error('Product not found');
+  }
+};
