@@ -16,15 +16,12 @@ exports.listAddress = async (req, res) => {
         query.where = req.query;
          console.log('query ', query);
         let results;
-        if (req.query.id) {
+        if (req.query.loginId) {
             console.log('if');
-            results = await commonService.findOne(db.address, query);
-        }
-        else {
-            console.log('else');
-
             results = await commonService.findAll(db.address, query);
         }
+        else
+            throw 'Please provid valid input';
         console.log('success');
         console.log(results);
         successRes(res, results, SUCCESS.LISTED);
