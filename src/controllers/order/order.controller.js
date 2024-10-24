@@ -94,8 +94,10 @@ exports.addOrder = async (req, res) => {
                 const productId = product.productId;
                 const quantityOrdered = product.quantity;
 
-                // Update the product stock (you'll need to define this function)
+                // Update the product stock
                 await this.updateProductStock(productId, quantityOrdered);
+                //Remove prodcuct from cart
+                await this.removeProductFromCart(productId, req.body.orderBy);
             }
             successRes(res, orderResults, SUCCESS.CREATED);
         }
@@ -134,6 +136,25 @@ exports.addOrder = async (req, res) => {
           }
         } else {
           throw new Error('Product not found');
+        }
+      };
+
+      exports.removeProductFromCart = async (productId, loginId) => {
+        console.log('delete product from cart:', productId, 'login id:', loginId);
+        let query = {};
+        query.where = {id: productId,
+            loginId: loginId
+        };
+        // Fetch the current product details
+        let product = await commonService.findOne(db.cart, query);
+        console.log('Fetched product:', product);
+      
+        if (product) {
+            await commonService.delete(db.cart, {
+              where: { id: productId, loginId: loginId },
+              //body: { quantity: newQuantity }, // delete quantity
+            });
+            console.log('Stock deleted successfully for Product ID:', productId);
         }
       };
       
