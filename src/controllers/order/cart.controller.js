@@ -102,7 +102,7 @@ exports.deleteCart = async(req, res) => {
       console.log('Fetched product:', product);
       if(product)
         results = await commonService.delete(db.cart, query);
-      else 
+      else
         throw 'No product found';
     }
     else
@@ -118,6 +118,50 @@ exports.deleteCart = async(req, res) => {
   }
 }
 
+exports.updateProductCount = async(req, res) => {
+  try{
+    console.log('req.query ', req.query);
+    let query = {};
+    let results;
+    const { productId, loginId, quantity } = req.query; 
+    if(req.query.productId && req.query.loginId){
+      query.where = {
+        id: productId
+      }
+      let product = await commonService.findOne(db.product, query);
+      console.log('Fetched product:', product);
+      if (product) {
+        const newQuantity = product.quantity - quantity;
+    
+        console.log('Current Quantity:', product.quantity, 'New Quantity:', newQuantity);
+    
+        if (newQuantity >= 0) {
+          await commonService.update(db.cart, {
+            where: { productId: productId, 
+              loginId: loginId
+             },
+            body: { quantity: quantity }, // Update quantity
+          });
+          console.log('Stock updated successfully for Product ID:', productId);
+            console.log('success');
+            console.log(results);
+            successRes(res, results, SUCCESS.UPDATED);
+        } else {
+          throw new Error('Not enough stock available');
+        }
+      } else {
+        throw new Error('Product not found');
+      }
+    }
+    else
+      throw 'Please provide valid inputs';
+  }
+  catch(error){
+    console.log('Error ', error);
+    const message = error.message ? error.message : ERRORS.UPDATED;
+    errorRes(res, error, message, file);
+  }
+}
   
 // exports.addCartOld = async (req, res) => {
 //     try {

@@ -26,4 +26,9 @@ module.exports = (app) => {
     value.deleteCart
   )
 
+  app.put(
+    "/updateProductCount",
+    value.updateProductCount
+  )
+
 }
