@@ -21,4 +21,9 @@ module.exports = (app) => {
   app.route("/listCart")
     .get(value.listCart)
 
+  app.delete(
+    "/deleteCart",
+    value.deleteCart
+  )
+
 }

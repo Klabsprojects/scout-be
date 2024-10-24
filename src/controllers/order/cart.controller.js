@@ -88,26 +88,56 @@ exports.addCart = async (req, res) => {
     }
   };
 
-  
-exports.addCartOld = async (req, res) => {
-    try {
-        console.log('try');
-        console.log(req.body);
-        let resultArr;
-        if(req.body.loginId && req.body.productId && req.body.quantity){
-            let query = req.body;
+exports.deleteCart = async(req, res) => {
+  try{
+    console.log('req.query ', req.query);
+    let query = {};
+    let results;
+    if(req.query.productId && req.query.loginId){
+      query.where = {
+        productId: req.query.productId,
+        loginId: req.query.loginId
+      }
+      let product = await commonService.findOne(db.cart, query);
+      console.log('Fetched product:', product);
+      if(product)
+        results = await commonService.delete(db.cart, query);
+      else 
+        throw 'No product found';
+    }
+    else
+      throw 'Please provide valid inputs';
+    console.log('success');
+    console.log(results);
+    successRes(res, results, SUCCESS.DELETED);
+  }
+  catch(error){
+    console.log('Error ', error);
+    const message = error.message ? error.message : ERRORS.DELETED;
+    errorRes(res, error, message, file);
+  }
+}
 
-            const results = await commonService.insertOne(db.cart, query);
-            console.log('results ', results);
-            successRes(res, results, SUCCESS.CREATED);
-        }
-        else
-            throw 'Error on inputs'
+  
+// exports.addCartOld = async (req, res) => {
+//     try {
+//         console.log('try');
+//         console.log(req.body);
+//         let resultArr;
+//         if(req.body.loginId && req.body.productId && req.body.quantity){
+//             let query = req.body;
+
+//             const results = await commonService.insertOne(db.cart, query);
+//             console.log('results ', results);
+//             successRes(res, results, SUCCESS.CREATED);
+//         }
+//         else
+//             throw 'Error on inputs'
         
-    } catch (error) {
-        console.log('catch', error);
-        const message = error.message ? error.message : ERRORS.LISTED;
-        errorRes(res, error, message, file);
-    }
-    }
+//     } catch (error) {
+//         console.log('catch', error);
+//         const message = error.message ? error.message : ERRORS.LISTED;
+//         errorRes(res, error, message, file);
+//     }
+//     }
 
