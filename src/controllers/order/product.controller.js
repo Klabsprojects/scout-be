@@ -16,13 +16,23 @@ exports.listProduct = async (req, res) => {
         query.where = req.query;
          console.log('query ', query);
         let results;
-        if (req.query.id) {
+        if (req.query.categoryList) {
+            console.log('Listing unique categories');
+            // Fetch distinct categories from the product table
+            results = await db.product.findAll({
+              attributes: [[db.Sequelize.fn('DISTINCT', db.Sequelize.col('category')), 'category']]
+            });
+          }
+        else if (req.query.id) {
             console.log('if');
             results = await commonService.findOne(db.product, query);
         }
+        else if(req.query.category){
+            console.log('else if');
+            results = await commonService.findAll(db.product, query);
+        }
         else {
             console.log('else');
-
             results = await commonService.findAll(db.product, query);
         }
         console.log('success');
@@ -47,8 +57,12 @@ exports.addProduct = async (req, res) => {
         } else {
             throw new Error('File upload failed: No file uploaded');
         }
-        const results = await commonService.insertOne(db.product, query);
-        successRes(res, results, SUCCESS.CREATED);
+        if(query.category){
+            const results = await commonService.insertOne(db.product, query);
+            successRes(res, results, SUCCESS.CREATED);
+        }
+        else
+            throw 'Pls provide valid inputs';
     } catch (error) {
         console.log('catch', error);
         const message = error.message ? error.message : ERRORS.LISTED;
