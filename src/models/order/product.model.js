@@ -25,6 +25,13 @@ module.exports = (sequelize, DataTypes) => {
 	    filepath: {
         type: DataTypes.STRING,
       },
+      status: {
+        type: DataTypes.ENUM({
+            values: ['active', 'inactive']
+          }),
+        allowNull: false,
+        defaultValue: 'active',
+      },
     },
     );
 

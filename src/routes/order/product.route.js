@@ -22,4 +22,15 @@ module.exports = (app) => {
   app.route("/listProduct")
     .get(value.listProduct)
 
+  app.put(
+    "/editProduct",
+    upload.single('filepath'),
+    value.editProduct
+  );
+
+  app.put(
+    "/deleteProduct",
+    value.deleteProduct
+  )
+
 }
