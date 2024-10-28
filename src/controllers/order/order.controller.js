@@ -15,16 +15,36 @@ exports.listOrder = async (req, res) => {
     try {
         let query = {};
         query.where = req.query;
+
          console.log('query ', query);
         let results;
         if (req.query.id) {
             console.log('if');
-            results = await commonService.findOne(db.order, query);
+            //results = await commonService.findOne(db.order, query);
+            results = await db.order.findOne({
+              include: [
+                {
+                    model: db.address, // Include the Login model
+                    as: 'addressIdRef', // Alias used in the association
+                    required: true, // Ensures that only records with a matching association are returned
+                }
+              ],
+              id: req.query.id 
+            })
         }
         else {
             console.log('else');
 
-            results = await commonService.findAll(db.order, query);
+            //results = await commonService.findAll(db.order, query);
+            results = await db.order.findAll({
+              include: [
+                  {
+                      model: db.address, // Include the Login model
+                      as: 'addressIdRef', // Alias used in the association
+                      required: true, // Ensures that only records with a matching association are returned
+                  }
+              ],
+            });
         }
         console.log('success');
         console.log(results);
