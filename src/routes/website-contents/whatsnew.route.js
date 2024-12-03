@@ -24,7 +24,6 @@ module.exports = (app) => {
 
   app.get(
     "/listWhatsNew",
-    [jwt.verifyToken],
     value.listWhatsNew
   );
   
