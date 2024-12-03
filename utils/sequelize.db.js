@@ -21,6 +21,7 @@ db.product = require("../src/models/order/product.model.js")(sequelize, Sequeliz
 db.order = require("../src/models/order/order.model.js")(sequelize, Sequelize);
 db.address = require("../src/models/order/address.model.js")(sequelize, Sequelize);
 db.cart = require("../src/models/order/cart.model.js")(sequelize, Sequelize);
+db.whatsnew = require("../src/models/website-contents/whatsnew.model.js")(sequelize, Sequelize);
 
 
 db.order.belongsTo(db.login, { as: 'orderByRef', foreignKey: 'orderBy' });
@@ -33,7 +34,7 @@ db.cart.belongsTo(db.login, { as: 'loginIdRef', foreignKey: 'loginId' });
 schema.forEach(x => {
     console.log(x.model);
      if(x.model == 'login' || x.model == 'user' || x.model == 'product' || x.model == 'order' ||
-        x.model == 'address' || x.model == 'cart'
+        x.model == 'address' || x.model == 'cart' || x.model == 'whatsnew'
      ){ 
         console.log('if ', x.table);
     }

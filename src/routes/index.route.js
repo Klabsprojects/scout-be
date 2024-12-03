@@ -5,4 +5,5 @@ require("./order/product.route")(app);
 require("./order/order.route")(app);
 require("./order/address.route")(app);
 require("./order/cart.route")(app);
+require("./website-contents/whatsnew.route")(app);
 module.exports = app;

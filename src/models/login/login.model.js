@@ -16,13 +16,10 @@ module.exports = (sequelize, DataTypes) => {
         }
       },
       email: {
-        type: DataTypes.STRING,
+        type: Sequelize.STRING,
+        unique: true,  // Ensure this is the only index on 'email'
         allowNull: false,
-        unique: true,  // Enforce uniqueness on the email field
-        validate: {
-          isEmail: true  // Optional: Ensure the value is a valid email format
-        }
-      },
+    },
       password: {
         type: DataTypes.STRING,
         allowNull: false,
