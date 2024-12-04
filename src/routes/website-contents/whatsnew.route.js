@@ -14,7 +14,6 @@ module.exports = (app) => {
 
   app.post(
     "/addWhatsNew",
-    [jwt.verifyToken],
     upload.fields([
       { name: 'fileTamil', maxCount: 1 },
       { name: 'fileEnglish', maxCount: 1 },
@@ -25,6 +24,15 @@ module.exports = (app) => {
   app.get(
     "/listWhatsNew",
     value.listWhatsNew
+  );
+
+  app.put(
+    "/editWhatsnew",
+    upload.fields([
+      { name: 'fileTamil', maxCount: 1 },
+      { name: 'fileEnglish', maxCount: 1 },
+    ]),
+    value.editWhatsnew
   );
   
 

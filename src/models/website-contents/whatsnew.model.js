@@ -35,13 +35,13 @@
 
 
 var Sequelize = require('sequelize');
-const { Login } = require("../../models/login/login.model")
 module.exports = (sequelize, DataTypes) => {
     const Whatsnew = sequelize.define("whatsnew", {
       
       dateOfUpload: {
-        type: Sequelize.DATE,
-        allowNull: false,
+        type: DataTypes.DATE,
+        allowNull: true,
+        defaultValue: Sequelize.NOW,
       },
 	    nameTamil: {
                 type: DataTypes.STRING,
