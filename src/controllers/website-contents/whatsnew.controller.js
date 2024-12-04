@@ -98,9 +98,13 @@ exports.addWhatsNewold = async (req, res) => {
     
     exports.editWhatsnew = async (req, res) => {
         try {
-            console.log('try');
-            console.log(req.body);
+            // console.log('try');
+            // console.log(req.body);
+            // let query = {};
+
+            console.log('Received request body:', req.body);
             let query = {};
+            query.body = req.body;
             let results;
             // Handle file uploads
             if (req.files && req.files['fileTamil'] && req.files['fileTamil'].length > 0) {
