@@ -133,3 +133,40 @@ exports.addWhatsNewold = async (req, res) => {
             errorRes(res, error, message, file);
         }
     }
+
+    exports.delete = async (req, res) => {
+        console.log('hello from deleteGuide controller');
+        try {
+            // Extract the guide id from the request query
+            const { id } = req.query;
+    
+            if (!id) {
+                return errorRes(res, null, "Guide ID is required.", ERRORS.NOT_FOUND);
+            }
+    
+            console.log(`Attempting to delete whatsnew with ID: ${id}`);
+    
+            // Step 1: Fetch the guide to get the loginId
+            const whatsnew = await commonService.findOne(db.whatsnew, { where: { id } });
+    
+            if (!whatsnew) {
+                return errorRes(res, null, "whatsnew not found.", ERRORS.NOT_FOUND);
+            }
+
+            // Step 4: Delete the guide after login is deleted
+            const deleteResult = await commonService.delete(db.whatsnew, { where: { id } });
+    
+            if (deleteResult) {
+                console.log('Guide deleted successfully');
+                successRes(res, null, SUCCESS.DELETED);
+            } else {
+                console.log('Guide not found');
+                errorRes(res, null, "Guide not found.", ERRORS.NOT_FOUND);
+            }
+    
+        } catch (error) {
+            console.log('Error deleting guide:', error);
+            const message = error.message ? error.message : ERRORS.GENERIC;
+            errorRes(res, error, message);
+        }
+    };

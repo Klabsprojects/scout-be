@@ -34,6 +34,10 @@ module.exports = (app) => {
     ]),
     value.editWhatsnew
   );
-  
+
+  app.delete(
+    "/deleteWhatsnew",
+    value.delete
+  )
 
 }
