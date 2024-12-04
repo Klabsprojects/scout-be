@@ -47,6 +47,11 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: false,
         defaultValue: 'secondary',
       },
+      isActive: {
+        type: DataTypes.BOOLEAN,  // Define as boolean
+        allowNull: false,
+        defaultValue: true,  
+      }
     },
     );
 

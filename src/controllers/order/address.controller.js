@@ -18,6 +18,7 @@ exports.listAddress = async (req, res) => {
         let results;
         if (req.query.loginId) {
             console.log('if');
+            query.where.isActive = true;
             results = await commonService.findAll(db.address, query);
         }
         else
@@ -50,3 +51,47 @@ exports.addAddress = async (req, res) => {
         
     }
     }
+
+    exports.delete = async (req, res) => {
+        console.log('hello from delete address controller');
+        try {
+            let query ={};
+            // Extract the guide id from the request query
+            const { id } = req.query;
+    
+            if (!id) {
+                return errorRes(res, null, "Address ID is required.", ERRORS.NOT_FOUND);
+            }
+    
+            console.log(`Attempting to delete address with ID: ${id}`);
+    
+            // Step 1: Fetch the guide to get the loginId
+            const address = await commonService.findOne(db.address, { where: { id } });
+    
+            if (!address) {
+                return errorRes(res, null, "address not found.", ERRORS.NOT_FOUND);
+            }
+
+            query.where = {
+                id: id
+            }
+            query.body = {
+                isActive: false
+            }
+            // Step 4: Delete the guide after login is deleted
+            const deleteResult = await commonService.update(db.address, query);
+    
+            if (deleteResult) {
+                console.log('address deleted successfully');
+                successRes(res, null, SUCCESS.DELETED);
+            } else {
+                console.log('address not found');
+                errorRes(res, null, "address not found.", ERRORS.NOT_FOUND);
+            }
+    
+        } catch (error) {
+            console.log('Error deleting address:', error);
+            const message = error.message ? error.message : ERRORS.GENERIC;
+            errorRes(res, error, message);
+        }
+    };

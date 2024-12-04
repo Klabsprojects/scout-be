@@ -21,4 +21,9 @@ module.exports = (app) => {
   app.route("/listAddress")
     .get(value.listAddress)
 
+    app.delete(
+      "/deleteAddress",
+      value.delete
+    )
+
 }
